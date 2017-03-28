@@ -73,43 +73,111 @@ export default {
   state,
   // ACTIONS ARE RESPONSIBLE FOR MANAGING ALL ASYNC REQUESTS
   actions: {
-            logout() {
-            api.delete('http://localhost:3000/logout')
-                .then(res => {
-                    state.user = {};
-                    Materialize.toast(res.data.message, 2000);
-                })
-                .catch(handleError)
-        },
-                register(email, name, password) {
-            api.post('http://localhost:3000/register', {
-                email: email,
-                name: name,
-                password: password
-            })
-                .then(res => {
-                    state.user = res.data.data
-                })
-                .catch(handleError)
-        },
-        login(userEmail, userPassword) {
-            api.post('http://localhost:3000/login', {
-                email: userEmail,
-                password: userPassword
-            })
-                .then(res => {
-                    console.log(res.data)
-                    if (res.data.data) {
-                        state.user = res.data.data
-                        this.getUserVaults()
-                        this.getShareKeeps()
-                    } else {
-                        state.error = res.data.error
-                        Materialize.toast(res.data.error, 1000);
-                    }
-                })
-                .catch(handleError)
-        },
+    logout() {
+      api.delete('http://localhost:3000/logout')
+        .then(res => {
+          state.user = {};
+          Materialize.toast(res.data.message, 2000);
+        })
+        .catch(handleError)
+    },
+    register(email, name, password) {
+      api.post('http://localhost:3000/register', {
+        email: email,
+        name: name,
+        password: password
+      })
+        .then(res => {
+          state.user = res.data.data
+        })
+        .catch(handleError)
+    },
+    login(userEmail, userPassword) {
+      api.post('http://localhost:3000/login', {
+        email: userEmail,
+        password: userPassword
+      })
+        .then(res => {
+          console.log(res.data)
+          if (res.data.data) {
+            state.user = res.data.data
+            this.getUserVaults()
+            this.getShareKeeps()
+          } else {
+            state.error = res.data.error
+            Materialize.toast(res.data.error, 1000);
+          }
+        })
+        .catch(handleError)
+    },
+    getVaults() {
+      api('vaults')
+        .then(res => {
+          state.vaults = res.data.data
+        })
+        .catch(handleError)
+    },
+    getVault(id) {
+      api('vaults/' + id)
+        .then(res => {
+          state.activeVault = res.data.data
+          // this.getTasksandLists(id)
+          this.getKeeps(id)
+        })
+        .catch(handleError)
+    },
+    getKeeps(id) {
+      api('vaults/' + id + '/data')
+        .then(res => {
+          console.log(res.data.data)
+          state.activeKeeps = res.data.data.keeps
+          // state.activeTasks = res.data.data.tasks
+        })
+    },
+    createVault(board) {
+      api.post('vaults', vault)
+        .then(res => {
+          // this.getUserBoards()
+          this.getUserBoards()
+
+        })
+        .catch(handleError)
+    },
+    getUserVaults() {
+      api('uservaults')
+        .then(res => {
+          state.userVaults = res.data.data
+        })
+        .catch(handleError)
+    },
+    createVault(vault) {
+      api.post('vaults', vault)
+        .then(res => {
+          this.getUserVaults()
+        })
+        .catch(handleError)
+    },
+    removeVault(vault) {
+      api.delete('vaults/' + vault._id)
+        .then(res => {
+          this.getUserVaults()
+        })
+        .catch(handleError)
+    },
+    createKeep(keep, vaultId) {
+      api.post('keeps', keep)
+        .then(res => {
+          this.getKeeps(vaultId)
+        })
+        .catch(handleError)
+    },
+    removeKeep(keep, vaultId) {
+      api.delete('keeps/' + keep._id)
+        .then(res => {
+          this.getKeeps(vaultId)
+        })
+        .catch(handleError)
+    },
   }
 
 }

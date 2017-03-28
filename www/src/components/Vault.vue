@@ -3,11 +3,11 @@
         <div class="row">
             <h3>{{ vault.name }}</h3>
 
-            <button v-if="!showListForm" @click="triggerListForm" class="waves-effect waves-light btn">Add Keep</button>
+            <button v-if="!showKeepForm" @click="triggerKeepForm" class="waves-effect waves-light btn">Add Keep</button>
             <!--<button @click="triggerInviteForm" class="waves-effect waves-light btn" v-if="!showListForm && !showInviteForm">Add Collaborators</button>-->
-
+            <!--Need to added additional fields-->
             <div class="container" v-if="showKeepForm">
-                <h4>Add a List</h4>
+                <h4>Add a Keep</h4>
                 <form class="row" @submit.prevent="addKeep">
                     <div class="col s12 input-field">
                         <input type="text" id="keepName" v-model="keepName" required>
@@ -17,25 +17,12 @@
                         <textarea class="materialize-textarea" id="keepDesc" cols="30" rows="10" v-model="keepDesc"></textarea>
                         <label for="keepDesc">Description</label>
                     </div>
-                    <button class="waves-effect waves-teal btn" type="submit">Add List</button>
-                    <button @click="triggerListForm" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
+                    <button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
+                    <button @click="triggerKeepForm" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
                 </form>
             </div>
-<!--Need to remove-->
-            <!--<div class="container" v-if="showInviteForm">
-                <h4>Add a Collaborator</h4>
-                <form class="row" @submit.prevent="inviteUser">
-                    <div class="col s12 input-field">
-                        <input type="text" id="inviteEmail" v-model="inviteEmail" required>
-                        <label for="inviteEmail">Collaborator E-mail</label>
-                    </div>
-                    <button type="submit" class="waves-effect waves-teal btn">Invite User</button>
-                    <button @click="triggerInviteForm" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
-                </form>
-            </div>-->
-<!--end remove-->
             <div v-for="keep in keeps">
-                <list :list="keep"></list>
+                <list :keep="keep"></list>
             </div>
         </div>
 
@@ -45,12 +32,11 @@
 
 
 <script>
-    import Keep from './Keep'
-    // import
-
+    // import Keep from './Keep'
+  
     export default {
-        name: 'board',
-        components: { List },
+        name: 'vault',
+        // components: { Keep },
         data() {
             return {
                 keepName: '',
@@ -64,14 +50,11 @@
             this.$root.$data.store.actions.getVaults(this.$route.params.id)
         },
         computed: {
-            board() {
-                return this.$root.$data.store.state.activeBoard
+            vaults() {
+                return this.$root.$data.store.state.myVaults
             },
-            lists() {
-                return this.$root.$data.store.state.activeLists
-            },
-            tasks() {
-                return this.$root.$data.store.state.activeTasks
+            keeps() {
+                return this.$root.$data.store.state.keeps
             }
         },
         methods: {
@@ -82,28 +65,14 @@
                     vaultId: this.$route.params.id
                 }, this.$route.params.id)
                 this.showKeepForm = false
-                this.listName = ''
-                this.listDesc = ''
+                this.keepName = ''
+                this.keepDesc = ''
             },
-            triggerListForm: function(){
+            triggerKeepForm: function () {
                 this.showKeepForm = !this.showKeepForm
                 this.showInviteForm = false
-                this.listName = ''
-                this.listDesc = ''
+                this.keepDesc = ''
             },
-            // triggerInviteForm: function(){
-            //     this.showInviteForm = !this.showInviteForm
-            //     this.showKeepForm = false
-            //     this.inviteEmail = ''
-            // },
-            // inviteUser: function(){
-            //     this.$root.$data.store.actions.addCollab({
-            //         email: this.inviteEmail
-            //     }, this.$route.params.id)
-            //     this.showKeepForm = false
-            //     this.showInviteForm = false
-            //     this.inviteEmail = ''
-            // }
         }
     }
 
