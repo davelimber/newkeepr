@@ -8,6 +8,7 @@ let api = axios.create({
 
 // REGISTER ALL DATA HERE
 let state = {
+  vault: [],
   user: {},
   myVaults: {},
   myKeeps: {},

@@ -9,7 +9,7 @@
           <div class="row">
             <div v-for="sharedVault in sharedVaults" class="col s12 m3">
               <div class="card hoverable blue-grey darken-1" @click="getVault(sharedVault._id)">
-                {{ sharedBoard.title }}
+                <!--{{ sharedBoard.title }}-->
 
                 <!--Pulling data from DB-->
                 <!--<router-link :to="'/boards/' + sharedboard._id" @click="getBoard(sharedboard._id)">
@@ -85,7 +85,7 @@
                       <h3>{{ sharedVault.title }}</h3>
                       <p></p>
                       <p>{{ sharedVault.body }}</p>
-                      <a href="" target="_blank">
+                      <!--<a href="" target="_blank">-->
                         <!--<p><span class="project-link dotted-underline">See it live</span></p>
                       </a>
                       <a href="" target="_blank">

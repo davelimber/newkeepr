@@ -3,7 +3,7 @@ import Router from 'vue-router'
 import Hello from '@/components/Hello'
 import Login from '../components/Login'
 import Register from '../components/Register'
-import Board from '../components/Vault'
+import Vault from '../components/Vault'
 
 Vue.use(Router)
 
@@ -21,7 +21,8 @@ export default new Router({
       path: '/register',
       name: 'Register',
       component: Register
-    }, {
+    }, 
+    {
       path: '/vaults/:id',
       name: 'Vault',
       component: Vault

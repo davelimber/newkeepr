@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="row">
-            <h3>{{ vault.name }}</h3>
+            <!--<h3>{{ vault.name }}</h3>-->
 
             <button v-if="!showKeepForm" @click="triggerKeepForm" class="waves-effect waves-light btn">Add Keep</button>
             <!--<button @click="triggerInviteForm" class="waves-effect waves-light btn" v-if="!showListForm && !showInviteForm">Add Collaborators</button>-->
