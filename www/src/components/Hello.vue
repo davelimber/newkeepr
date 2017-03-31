@@ -48,9 +48,11 @@
         <button v-if="!showVaultForm" @click="triggerVaultForm" class="waves-effect waves-light btn">Add Keep!</button>
       </router-link>
 
+      <!--List of Vaults with link to add keep within -->
       <div class="row">
         <div v-for="uservault in uservaults" class="col s12 m3">
           <div class="card hoverable blue-grey darken-1">
+            <button @click="getVault(uservault._id)" class="waves-effect waves-light btn">get info</button>
             <router-link :to="'/keeps/'" @click="getVault(uservault._id)">
               <div class="card-content white-text">
                 <span class="card-title">{{ uservault.name }}</span>
@@ -93,10 +95,13 @@
                               <div class="row">
                                 <div v-for="uservault in uservaults" class="col s12 m3">
 
-                                  <span>{{ uservault.name }}</span>
-                                  <p>{{ uservault.description }}</p>
-                                </div>
+                                  <!--<span>{{ uservault.name }}</span>
+                                  <p>{{ uservault.description }}</p>-->
+                                  <!--<input type="radio" v-model={{ uservault.name }} id="choice">-->
+                                  <label for="choice">{{ uservault.name }}</label>
 
+                                </div>
+                                <span>Picked: {{ vaultName }}</span>
                                 <button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
                                 <button @click="routeHome" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
 
@@ -170,7 +175,7 @@
       routeHome: function () {
         console.log('route home function')
         this.showKeepToVault();
-      
+
       },
     }
 

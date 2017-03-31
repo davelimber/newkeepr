@@ -5,6 +5,8 @@
                 <div class="modal-container">
                     <div>
                         <h4>Add a Keep</h4>
+
+                        
                         <form class="row" @submit.prevent="addKeep">
                             <div class="col s12 input-field">
                                 <input type="text" id="keepName" v-model="keepName" required>
@@ -60,6 +62,10 @@
             }
         },
         methods: {
+            getVault: function (vaultId) {
+                console.log('get vault by vaultId')
+                console.log(vaultId)
+            },
             addKeep: function () {
                 this.$root.$data.store.actions.createKeep({
                     title: this.keepName,
