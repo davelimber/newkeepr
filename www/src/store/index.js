@@ -127,6 +127,15 @@ export default {
         })
         .catch(handleError)
     },
+    getUserVaults() {
+      api('uservaults')
+        .then(res => {
+          state.myVaults = res.data.data
+          console.log('my vaults')
+          console.log(res.data.data)
+        })
+        .catch(handleError)
+    },
     getKeeps(id) {
       api('vaults/' + id + '/data')
         .then(res => {
@@ -134,22 +143,6 @@ export default {
           state.activeKeeps = res.data.data.keeps
           // state.activeTasks = res.data.data.tasks
         })
-    },
-    createVault(board) {
-      api.post('vaults', vault)
-        .then(res => {
-          // this.getUserBoards()
-          this.getUserBoards()
-
-        })
-        .catch(handleError)
-    },
-    getUserVaults() {
-      api('uservaults')
-        .then(res => {
-          state.userVaults = res.data.data
-        })
-        .catch(handleError)
     },
     createVault(vault) {
       api.post('vaults', vault)

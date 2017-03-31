@@ -9,7 +9,9 @@
           <div class="row">
             <div v-for="sharedVault in sharedVaults" class="col s12 m3">
               <div class="card hoverable blue-grey darken-1" @click="getVault(sharedVault._id)">
-                <!--{{ sharedBoard.title }}-->
+                {{ sharedVault.title }}
+
+                
 
                 <!--Pulling data from DB-->
                 <!--<router-link :to="'/boards/' + sharedboard._id" @click="getBoard(sharedboard._id)">
@@ -32,9 +34,10 @@
 
 
     <div v-if="this.$root.$data.store.state.user._id">
-      <h3>Your Vault</h3>
+      <h3>Vaults - a place for keeps!</h3>
 
-      <button v-if="!showVaultForm" @click="triggerVaultForm" class="waves-effect waves-light btn">Add Vault</button>
+      <button v-if="!showVaultForm && !hideVaultForm" @click="triggerVaultForm" class="waves-effect waves-light btn">Add Vault</button>
+       <!--<button @click="hideVaultForm" class="waves-effect waves-light btn">Toggle </button>-->
       <div class="container" v-if="showVaultForm">
         <h5>Add a Vault </h5>
         <form class="row" @submit.prevent="addVault">
@@ -47,7 +50,25 @@
             <label for="vaultDesc">Description</label>
           </div>
           <button class="waves-effect waves-teal btn" type="submit">Add Vault</button>
-          <button @click="triggerBoardForm" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
+          <button @click="triggerVaultForm" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
+        </form>
+      </div>
+
+            <button v-if="!showVaultForm && !hideVaultForm" @click="triggerVaultForm" class="waves-effect waves-light btn">Add Keep!</button>
+       <!--<button @click="hideVaultForm" class="waves-effect waves-light btn">Toggle </button>-->
+      <div class="container" v-if="showVaultForm">
+        <h5>Add a Vault </h5>
+        <form class="row" @submit.prevent="addVault">
+          <div class="col s12 input-field">
+            <input type="text" id="vaultName" v-model="vaultName" required>
+            <label for="vaultName">Title</label>
+          </div>
+          <div class="col s12 input-field">
+            <textarea class="materialize-textarea" id="vaultDesc" cols="30" rows="10" v-model="vaultDesc"></textarea>
+            <label for="vaultDesc">Description</label>
+          </div>
+          <button class="waves-effect waves-teal btn" type="submit">Add Vault</button>
+          <button @click="triggerVaultForm" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
         </form>
       </div>
 
@@ -119,7 +140,8 @@
       return {
         vaultName: '',
         vaultDesc: '',
-        showvaultForm: false
+        showVaultForm: false,
+        hideVaultForm: false
       }
     },
     computed: {
@@ -133,24 +155,30 @@
     },
     methods: {
       getVault: function (vaultId) {
+        console.log('get vault by vaultId')
         console.log(vaultId)
       },
       deleteVault: function (vault) {
         this.$root.$data.store.actions.removeVault(vault)
       },
-      addBoard: function () {
+      addVault: function () {
+        console.log('in addvault function')
         this.$root.$data.store.actions.createVault({
           name: this.vaultName,
           description: this.vaultDesc
         })
         console.log(this.vaultName)
+        console.log(this.uservaults)
         this.showVaultForm = false
         this.vaultName = ''
         this.vaultDesc = ''
       },
       triggerVaultForm: function () {
         this.showVaultForm = !this.showVaultForm
-      }
+      },
+      hideVaultForm: function () {
+        this.hideVaultForm = !this.hideVaultForm
+      },
     }
 
   }

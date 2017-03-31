@@ -44,7 +44,7 @@ function API(model, schema) {
 
   function create(req, res, next) {
     var action = actions.create
-
+console.log('in create function - api')
     let model = new schema(req.body)
     model.userId = req.session.uid
     
