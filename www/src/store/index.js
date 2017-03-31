@@ -158,17 +158,18 @@ export default {
         })
         .catch(handleError)
     },
-    createKeep(keep, vaultId) {
+    createKeep(keep) {
       api.post('keeps', keep)
         .then(res => {
-          this.getKeeps(vaultId)
+          // this.getKeeps(vaultId)
+          console.log(keep)
         })
         .catch(handleError)
     },
-    removeKeep(keep, vaultId) {
+    removeKeep(keep) {
       api.delete('keeps/' + keep._id)
         .then(res => {
-          this.getKeeps(vaultId)
+          // this.getKeeps(vaultId)
         })
         .catch(handleError)
     },
