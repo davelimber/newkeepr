@@ -82,6 +82,8 @@
                     <h3>{{ sharedVault.title }}</h3>
                     <p>{{ sharedVault.body }}</p>
 
+
+
                     <button v-if="showKeepToVaultForm" @click="showKeepToVault" class="waves-effect waves-light btn">Save Keep!</button>
 
 
@@ -92,25 +94,24 @@
                             <div>
                               <h4>Save Keep to Vault</h4>
                               <h3>Select Vault</h3>
-                              <div class="row">
-                                <div v-for="uservault in uservaults" class="col s12 m3">
+                              <form @submit.prevent="getVault(vaultId)" class="row">
 
-                                  <!--<span>{{ uservault.name }}</span>
-                                  <p>{{ uservault.description }}</p>-->
-                                  <!--<input type="radio" v-model={{ uservault.name }} id="choice">-->
+                                <div v-for="(uservault, index) in uservaults" class="col s12 m3">
+
+                            
+                                  <input type="checkbox" :id="index" v-model="vaultId" :value="uservault._id">
                                   <label for="choice">{{ uservault.name }}</label>
 
                                 </div>
-                                <span>Picked: {{ vaultName }}</span>
                                 <button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
                                 <button @click="routeHome" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
-
-                              </div>
+                              </form>
                             </div>
                           </div>
                         </div>
                       </div>
                     </transition>
+
 
                   </div>
                 </div>
@@ -124,6 +125,7 @@
 </template>
 
 <script>
+  // import selectvault from './SelectVault'
   export default {
     name: 'hello',
     data() {
@@ -131,11 +133,13 @@
         vaultName: '',
         vaultDesc: '',
         showVaultForm: false,
-        showKeepToVaultForm: true
+        showKeepToVaultForm: true,
+        vaultId: []
       }
     },
     computed: {
-      uservaults() {
+      uservaults(vaults) {
+
         return this.$root.$data.store.state.myVaults
       },
 
@@ -144,9 +148,10 @@
       }
     },
     methods: {
-      getVault: function (vaultId) {
-        console.log('get vault by vaultId')
-        console.log(vaultId)
+      getVault: function (x) {
+        console.log(x)
+        console.log(this.vaultId)
+        // console.log(vaultId)
       },
       deleteVault: function (vault) {
         this.$root.$data.store.actions.removeVault(vault)
@@ -185,6 +190,9 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  input {
+    display: block !important
+  }
   h1,
   h2 {
     font-weight: normal;

@@ -37,6 +37,7 @@ export default new Router({
       path: '/keeps/',
       name: 'Keep',
       component: Keep
-    },
+    }
+  
   ]
 })
