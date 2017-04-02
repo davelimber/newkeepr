@@ -7,9 +7,9 @@
 
           <!--show keeps for non logged in users-->
           <div class="row">
-            <div v-for="sharedVault in sharedVaults" class="col s12 m3">
-              <div class="card hoverable blue-grey darken-1" @click="getVault(sharedVault._id)">
-                {{ sharedVault.title }}
+            <div v-for="sharedKeeps in sharedKeeps" class="col s12 m3">
+              <div class="card hoverable blue-grey darken-1" @click="getVault(sharedKeeps._id)">
+                {{ sharedKeeps.title }}
 
               </div>
             </div>
@@ -44,16 +44,34 @@
       </div>
 
       <!--Add Keeps-->
-      <router-link :to="'/vaults/'">
+      <!--<router-link :to="'/vaults/'">
         <button v-if="!showVaultForm" @click="triggerVaultForm" class="waves-effect waves-light btn">Add Keep!</button>
-      </router-link>
+      </router-link>-->
 
+      <!--add keeps!-->
+      <button v-if="!showKeepForm" @click="triggerKeepForm" class="waves-effect waves-light btn">Add Keep</button>
+
+      <div class="container" v-if="showKeepForm">
+        <h5>Add a Keep </h5>
+        <form class="row" @submit.prevent="addKeep">
+          <div class="col s12 input-field">
+            <input type="text" id="keepName" v-model="keepName" required>
+            <label for="keepName">Title</label>
+          </div>
+          <div class="col s12 input-field">
+            <textarea class="materialize-textarea" id="keepDesc" cols="30" rows="10" v-model="keepDesc"></textarea>
+            <label for="keepDesc">Description</label>
+          </div>
+          <button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
+          <button @click="resetKeepForm" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
+        </form>
+      </div>
       <!--List of Vaults with link to add keep within -->
       <div class="row">
         <div v-for="uservault in uservaults" class="col s12 m3">
           <div class="card hoverable blue-grey darken-1">
             <button @click="getVault(uservault._id)" class="waves-effect waves-light btn">get info</button>
-            <router-link :to="'/keeps/'" @click="getVault(uservault._id)">
+            <router-link :to="'/keeps/'" >
               <div class="card-content white-text">
                 <span class="card-title">{{ uservault.name }}</span>
                 <p>{{ uservault.description }}</p>
@@ -72,45 +90,48 @@
     <div v-if="this.$root.$data.store.state.user._id">
       <h3>Shared Keeps</h3>
       <div class="row">
-        <div v-for="sharedVault in sharedVaults" class="col s12 m3">
+        <div v-for="sharedKeep in sharedKeeps" class="col s12 m3">
           <div class="card hoverable blue-grey darken-1">
             <div class="row thumbnails-row">
               <div class="col xs-12 col-sm-6 col-md-4">
                 <div class="thumbnail">
-                  <img :src="sharedVault.imgUrl" alt="">
+                  <img :src="sharedKeep.imgUrl" alt="">
                   <div class="caption">vaultId)
-                    <h3>{{ sharedVault.title }}</h3>
-                    <p>{{ sharedVault.body }}</p>
+                    <h3>{{ sharedKeep.title }}</h3>
+                    <p>{{ sharedKeep.body }}</p>
 
 
-
-                    <button v-if="showKeepToVaultForm" @click="showKeepToVault" class="waves-effect waves-light btn">Save Keep!</button>
-
-
-                    <transition name="modal" v-if="!showKeepToVaultForm">
+                    <!--<router-link :to="'/selectvault/'">-->
+                    <button v-if="showKeepToVaultForm" @click="showKeepToVault(sharedKeep)" class="waves-effect waves-light btn">Save Keep!</button>
+                    <!--</router-link>-->
+                    <!--<transition name="modal" v-if="!showKeepToVaultForm">
                       <div class="modal-mask">
                         <div class="modal-wrapper">
                           <div class="modal-container">
                             <div>
-                              <h4>Save Keep to Vault</h4>
-                              <h3>Select Vault</h3>
-                              <form @submit.prevent="getVault(vaultId)" class="row">
 
-                                <div v-for="(uservault, index) in uservaults" class="col s12 m3">
+                              <form @submit.prevent="getVault(vaultId)" class="row">-->
 
-                            
-                                  <input type="checkbox" :id="index" v-model="vaultId" :value="uservault._id">
-                                  <label for="choice">{{ uservault.name }}</label>
+                    <!--<div v-for="(uservault, index) in uservaults" class="col s12 m3">-->
+                    <!--<div class="input-field col s12">
+                                  <select id="selected" required>
+          <option v-for="vault in uservaults" :value="vault._id">{{ vault.name }}</option>
+        </select>
+                                  <label>Vault</label>
+                                </div>-->
 
-                                </div>
-                                <button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
+                    <!--<input type="selected" :id="index" v-model="vaultId" :value="uservault._id">
+                                  <label for="choice">{{ uservault.name }}</label>-->
+
+                    <!--</div>-->
+                    <!--<button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
                                 <button @click="routeHome" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
                               </form>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </transition>
+                    </transition>-->
 
 
                   </div>
@@ -125,16 +146,24 @@
 </template>
 
 <script>
-  // import selectvault from './SelectVault'
+  import selectvault from './SelectVault'
   export default {
+
     name: 'hello',
+    components: {
+      selectvault
+    },
     data() {
       return {
         vaultName: '',
         vaultDesc: '',
         showVaultForm: false,
         showKeepToVaultForm: true,
-        vaultId: []
+        vaultId: [],
+        keepName: '',
+        keepDesc: '',
+        showKeepForm: false,
+
       }
     },
     computed: {
@@ -143,7 +172,7 @@
         return this.$root.$data.store.state.myVaults
       },
 
-      sharedVaults() {
+      sharedKeeps() {
         return this.$root.$data.store.state.keeps
       }
     },
@@ -168,11 +197,43 @@
         this.vaultName = ''
         this.vaultDesc = ''
       },
+      addKeep: function () {
+        this.$root.$data.store.actions.createKeep({
+          title: this.keepName,
+          body: this.keepDesc,
+          imgUrl: this.url,
+          public: this.public,
+        }, this.$route.params.id)
+        this.showKeepForm = false
+        this.keepName = ''
+        this.keepDesc = ''
+        this.$router.push("/")
+      },
       triggerVaultForm: function () {
         this.showVaultForm = !this.showVaultForm
       },
-      showKeepToVault: function () {
-        this.showKeepToVaultForm = !this.showKeepToVaultForm
+      triggerKeepForm: function () {
+        this.showVaultForm = false
+        this.showKeepForm = !this.showKeepForm
+      },
+      resetKeepForm: function () {
+        this.showVaultForm = false
+        this.showKeepForm = false
+      },
+      // showKeepToVault: function (sharedKeep) {
+      //   this.showKeepToVaultForm = !this.showKeepToVaultForm
+      //   console.log('here I am!')
+      //   console.log(sharedKeep.title)
+      // },
+      showKeepToVault: function (selectedKeep) {
+        if (this.$root.$data.store.state.user._id) {
+          this.$root.$data.store.state.activeKeep = selectedKeep
+          console.log('passed user test')
+          this.$router.push({ path: '/selectvault/' })
+        } else {
+          this.$router.push({ path: '/register' })
+          Materialize.toast('You must have an account to view and save keeps!', 1000);
+        }
       },
       saveKeepToVault: function () {
 
@@ -193,6 +254,7 @@
   input {
     display: block !important
   }
+  
   h1,
   h2 {
     font-weight: normal;

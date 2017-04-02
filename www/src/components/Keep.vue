@@ -1,13 +1,13 @@
 <template>
 
-    <transition name="modal" v-if="showmodal">
+    <!--<transition name="modal" v-if="showmodal">
         <div class="modal-mask">
             <div class="modal-wrapper">
-                <div class="modal-container">
+                <div class="modal-container">-->
 
-                    Vault name, list of keeps, and keep to put in vault goes here!
+                
                     <div>
-                        <h4>Add a Keep</h4>
+                        <h4>Vault a Keep</h4>
 
                         <!--{{ uservault._id  }}-->
                         <form class="row" @submit.prevent="addKeep">
@@ -17,11 +17,15 @@
                             </div>
                             <div class="col s12 input-field">
                                 <textarea class="materialize-textarea" id="keepDesc" cols="30" rows="10" v-model="keepDesc"></textarea>
-                                <label for="keepDesc">Description</label>
+                                <label for="keepDesc">Article Link</label>
                             </div>
                             <div class="col s12 input-field">
                                 <textarea class="materialize-textarea" id="url" cols="30" rows="10" v-model="url"></textarea>
                                 <label for="url">URL</label>
+                            </div>
+                            <div class="col s12 input-field">
+                                <textarea class="materialize-textarea" id="tags" cols="30" rows="10" v-model="tags"></textarea>
+                                <label for="url">Tags (seprate by commas)</label>
                             </div>
                             <div class="col s12 input-field">
                                 <textarea class="modal-footer" id="public" type="checkbox" v-model="public"></textarea>
@@ -31,17 +35,16 @@
                             <button @click="routeHome" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
                         </form>
                     </div>
-                </div>
+                <!--</div>
             </div>
         </div>
-    </transition>
+    </transition>-->
 </template>
 
 
 <script>
     export default {
         name: 'keep',
-        // props: [ uservault ],
         data() {
             return {
                 vault: [],
@@ -69,13 +72,17 @@
             addKeep: function () {
                 this.$root.$data.store.actions.createKeep({
                     title: this.keepName,
-                    body: this.keepDesc,
+                    articleLink: this.keepDesc,
                     imgUrl: this.url,
                     public: this.public,
+                    tags: this.tags,
                 }, this.$route.params.id)
                 this.showKeepForm = false
                 this.keepName = ''
                 this.keepDesc = ''
+                this.url = ''
+                this.public = ''
+                this.tags = ''
                 this.$router.push("/")
             },
             triggerKeepForm: function () {

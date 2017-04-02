@@ -8,6 +8,7 @@ let api = axios.create({
 
 // REGISTER ALL DATA HERE
 let state = {
+  activeKeep: {},
   vault: [],
   user: {},
   myVaults: {},
@@ -75,7 +76,7 @@ export default {
   // ACTIONS ARE RESPONSIBLE FOR MANAGING ALL ASYNC REQUESTS
   actions: {
     logout() {
-      api.delete('http://localhost:3000/logout')
+      api.delete('logout')
         .then(res => {
           state.user = {};
           Materialize.toast(res.data.message, 2000);
@@ -83,7 +84,7 @@ export default {
         .catch(handleError)
     },
     register(email, name, password) {
-      api.post('http://localhost:3000/register', {
+      api.post('register', {
         email: email,
         name: name,
         password: password
@@ -94,7 +95,7 @@ export default {
         .catch(handleError)
     },
     login(userEmail, userPassword) {
-      api.post('http://localhost:3000/login', {
+      api.post('login', {
         email: userEmail,
         password: userPassword
       })
@@ -172,6 +173,11 @@ export default {
           // this.getKeeps(vaultId)
         })
         .catch(handleError)
+    },
+    addKeepToVault(id, vault) {
+      api.put('keeptonewvault/' + id, vault).then(res => {
+        this.getKeep(id)
+      })
     },
   }
 

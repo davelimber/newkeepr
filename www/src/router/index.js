@@ -5,6 +5,7 @@ import Login from '../components/Login'
 import Register from '../components/Register'
 import Vault from '../components/Vault'
 import Keep from '../components/Keep'
+import SelectVault from '../components/SelectVault'
 
 Vue.use(Router)
 
@@ -28,16 +29,26 @@ export default new Router({
       name: 'Vault',
       component: Vault
     },
-    {
-      path: '/vaults/',
-      name: 'Vault',
-      component: Vault
-    },
+    // {
+    //   path: '/vaults/',
+    //   name: 'Vault',
+    //   component: Vault
+    // },
     {
       path: '/keeps/',
       name: 'Keep',
       component: Keep
+    },
+    {
+      path: '/selectvault/',
+      name: 'SelectVault',
+      component: SelectVault
+    },
+    {
+      path: '/selectvault/:id',
+      name: 'SelectVault',
+      component: SelectVault
     }
-  
+
   ]
 })
