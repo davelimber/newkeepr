@@ -1,44 +1,15 @@
 <template>
 
-    <!--<transition name="modal" v-if="showmodal">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-                <div class="modal-container">-->
 
-                
-                    <div>
-                        <h4>Vault a Keep</h4>
 
-                        <!--{{ uservault._id  }}-->
-                        <form class="row" @submit.prevent="addKeep">
-                            <div class="col s12 input-field">
-                                <input type="text" id="keepName" v-model="keepName" required>
-                                <label for="keepName">Title</label>
-                            </div>
-                            <div class="col s12 input-field">
-                                <textarea class="materialize-textarea" id="keepDesc" cols="30" rows="10" v-model="keepDesc"></textarea>
-                                <label for="keepDesc">Article Link</label>
-                            </div>
-                            <div class="col s12 input-field">
-                                <textarea class="materialize-textarea" id="url" cols="30" rows="10" v-model="url"></textarea>
-                                <label for="url">URL</label>
-                            </div>
-                            <div class="col s12 input-field">
-                                <textarea class="materialize-textarea" id="tags" cols="30" rows="10" v-model="tags"></textarea>
-                                <label for="url">Tags (seprate by commas)</label>
-                            </div>
-                            <div class="col s12 input-field">
-                                <textarea class="modal-footer" id="public" type="checkbox" v-model="public"></textarea>
-                                <label for="public">Public?</label>
-                            </div>
-                            <button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
-                            <button @click="routeHome" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
-                        </form>
-                    </div>
-                <!--</div>
-            </div>
-        </div>
-    </transition>-->
+
+    <div>
+        <h4>Keeps for vault</h4>
+
+        <!--{{ uservault._id  }}-->
+
+    </div>
+
 </template>
 
 
@@ -54,11 +25,11 @@
                 url: '',
                 tags: '',
                 public: true,
-                showmodal: true
             }
         },
         // mounted() {
-        //     this.$root.$data.store.actions.getVaults(this.$route.params.id)
+        //     console.log(this.$route.params.id)
+        //     this.$root.$data.store.actions.getKeeps(this.$route.params.id)
         // },
         computed: {
             vaults() {

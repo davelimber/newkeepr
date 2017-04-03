@@ -1,8 +1,7 @@
-import { models } from '../config/constants'
-
 let mongoose = require('mongoose')
 let ObjectId = mongoose.Schema.ObjectId
 let Schema = mongoose.Schema
+import { models } from '../config/constants'
 
 let schema = new Schema({
     title: { type: String, required: true },

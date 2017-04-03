@@ -1,33 +1,26 @@
 <template>
     <div>
-        <h2> Hello! </h2>
+        <h2> Save a Keep </h2>
         <h3>{{ activeKeep.title }}</h3>
-        <!--{{ uservault.name }}-->
-        <!--<div v-for="uservault in uservaults" class="col s12 m3">
+        <p>save the selected keep to one or more vaults below</p>
 
 
-            <input type="checkbox" id="choice" v-model="vaultName">
-            <label for="choice">{{ uservault.name }}</label>
+        <div class="row">
+            <div v-for="uservault in uservaults" class="col s12 m3">
+                <div class="card hoverable blue-grey darken-1">
 
-        </div>
-        <div>
-            vaultName
-            <h3>Picked: {{ vaultName }}</h3>
-        </div>
 
-    </div>-->
+                    <div class="card-content white-text">
+                        <span class="card-title">{{ uservault.name }}</span>
+                        <p>{{ uservault.description }}</p>
+                    </div>
 
-        <div class="container">
-            <form class="col s12" @submit.prevent="addToVault">
-                <div class="input-field col s8">
-                    <select id="selected">
-                    <option   v-for="vault in uservaults" :value="vault.title">{{vault.title}}</option>
-                </select>
-                    <label>Vault</label>
+                    <div class="card-action right-align">
+                        <button @click="addToVault(activeKeep._id, uservault)" class="waves-effect waves-teal btn-flat"><i class="fa fa-plus"></i>Add Keep to Vault</button>
+                    </div>
                 </div>
-                <button class="waves-effect waves-light btn" alt="add keep to vault">Add to Vault</button>
-            </form>
-
+            </div>
+            <button @click="routeHome()" class="waves-effect waves-teal btn-flat"><i class="fa fa-plus"></i>Home</button>
         </div>
     </div>
 </template>
@@ -39,13 +32,15 @@
         props: ['sharedKeep'],
         data() {
             return {
-                vaultName: ''
+                vaultName: '',
+                activeKeepId: '',
+                userVaultId: ''
             }
         },
         computed: {
-            uservaults(vaults) {
+            uservaults() {
 
-                return this.$root.$data.store.state.keeps
+                return this.$root.$data.store.state.myVaults
             },
 
             activeKeep() {
@@ -61,12 +56,10 @@
                 // this.showmodal = false
                 this.$router.push("/")
             },
-            addToVault() {
-                var selectedName = document.getElementById("selected").value
-                var vault = {
-                    name: selectedName,
-                }
-                this.$root.$data.store.actions.addKeepToVault(this.keep._id, vault)
+            addToVault(x, y) {
+                console.log(x)
+                console.log(y)
+                this.$root.$data.store.actions.addKeepToVault(x, y)
                 Materialize.toast('keep added to vault', 5000)
             }
 

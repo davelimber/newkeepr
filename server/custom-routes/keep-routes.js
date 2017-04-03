@@ -8,6 +8,7 @@ export default {
         path: '/publickeeps',
         reqType: 'get',
         method(req, res, next) {
+            console.log('in public keeps')
             let action = 'Find Public Keeps'
             Keeps.find({ public: true })
                 .then(keeps => {
@@ -68,23 +69,28 @@ export default {
         reqType: 'put',
         method(req, res, next) {
             let action = "Keep To New Vault"
+            console.log('add keep routes in keep to new vault')
                 // let result;
             Keeps.findOne({ _id: req.params.id })
                 .then(keep => {
                     keep.timesVaulted += 1
                     console.log(keep.timesVaulted)
                     keep.save()
+                    // console.log(vault)
+                    // let vaultid = vault
                     Vaults.findOne({ name: req.body.name })
+                    // Vaults.findOne({ vaultid })
                         .then(vault => {
-                            console.log('VAULT', vault)
+                            console.log('show vault for keep', vault)
                             vault._doc.keeps.push(keep._id)
                                 // result = vault
                             vault.save()
-                            console.log('KEEPS', vault._doc.keeps)
+                            console.log('kept in vault', vault._doc.keeps)
                             res.send(handleResponse(action, vault))
                         })
                 })
                 .catch(error => {
+                    // console.log('error in keep to vault occured')
                     res.send(handleResponse(action, null, error))
                 })
         }

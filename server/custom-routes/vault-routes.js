@@ -16,25 +16,25 @@ export default {
         })
     }
   },
-//   keeps: {
-//     path: '/keeps/:id/data',
-//     reqType: 'get',
-//     method(req, res, next) {
-//       let action = 'Find  Board'
-//       let data = {}
-//       Tasks.find({ boardId: req.params.id })
-//         .then(tasks => {
-//           data.tasks = tasks
-//           Lists.find({ boardId: req.params.id })
-//             .then(lists => {
-//               data.lists = lists
-//               res.send(handleResponse(action, data))
-//             }).catch(error => {
-//               return next(handleResponse(action, null, error))
-//             })
-//         })
-//     }
-//   },
+  removeKeepFromVault: {
+    path: '/vault/:id/removekeep',
+    reqType: 'put',
+    method(req, res, next) {
+      let action = 'remvoe the keep from a vault'
+      Vaults.findById(req.params.id)
+        .then(vault => {
+          let index = vault.keeps.indexOf(req.body.keepId)
+          vault.keeps.splice(index, 1)
+          vault.save()
+            .then(savedVault => {
+              res.send(handleResponse(action, savedVault))
+            })
+        })
+        .catch(error => {
+          return next(handleResponse(action, null, error))
+        })
+    }
+  }
 }
 
 function handleResponse(action, data, error) {

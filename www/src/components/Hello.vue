@@ -7,9 +7,9 @@
 
           <!--show keeps for non logged in users-->
           <div class="row">
-            <div v-for="sharedKeeps in sharedKeeps" class="col s12 m3">
+            <div v-for="sharedKeep in sharedKeeps" class="col s12 m3">
               <div class="card hoverable blue-grey darken-1" @click="getVault(sharedKeeps._id)">
-                {{ sharedKeeps.title }}
+                {{ sharedKeep.title }}
 
               </div>
             </div>
@@ -43,14 +43,8 @@
         </form>
       </div>
 
-      <!--Add Keeps-->
-      <!--<router-link :to="'/vaults/'">
-        <button v-if="!showVaultForm" @click="triggerVaultForm" class="waves-effect waves-light btn">Add Keep!</button>
-      </router-link>-->
-
       <!--add keeps!-->
       <button v-if="!showKeepForm" @click="triggerKeepForm" class="waves-effect waves-light btn">Add Keep</button>
-
       <div class="container" v-if="showKeepForm">
         <h5>Add a Keep </h5>
         <form class="row" @submit.prevent="addKeep">
@@ -59,8 +53,21 @@
             <label for="keepName">Title</label>
           </div>
           <div class="col s12 input-field">
+            <textarea class="materialize-textarea" id="keepUrl" cols="30" rows="10" v-model="keepUrl"></textarea>
+            <label for="keepUrl">Image URL</label>
+          </div>
+          <div class="col s12 input-field">
             <textarea class="materialize-textarea" id="keepDesc" cols="30" rows="10" v-model="keepDesc"></textarea>
-            <label for="keepDesc">Description</label>
+            <label for="keepDesc">Article Link</label>
+          </div>
+          <div class="col s12 input-field">
+            <textarea class="materialize-textarea" id="keepTags" cols="30" rows="10" v-model="keepTags"></textarea>
+            <label for="keepTags">Tags (seprate by commas)</label>
+          </div>
+          <div class="input-field col s2 ">
+            <input type="checkbox" class="filled-in" id="public-check-box" checked>
+            <!--<textarea class="materialize-textarea" id="KeepPublic" cols="30" rows="10" v-model="KeepPublic"></textarea>-->
+            <label for="KeepPublic">Public?</label>
           </div>
           <button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
           <button @click="resetKeepForm" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
@@ -70,8 +77,8 @@
       <div class="row">
         <div v-for="uservault in uservaults" class="col s12 m3">
           <div class="card hoverable blue-grey darken-1">
-            <button @click="getVault(uservault._id)" class="waves-effect waves-light btn">get info</button>
-            <router-link :to="'/keeps/'" >
+            <!--<button @click="getVault(uservault._id)" class="waves-effect waves-light btn">get info</button>-->
+            <router-link :to="'/vaults/' + uservault._id">
               <div class="card-content white-text">
                 <span class="card-title">{{ uservault.name }}</span>
                 <p>{{ uservault.description }}</p>
@@ -95,45 +102,11 @@
             <div class="row thumbnails-row">
               <div class="col xs-12 col-sm-6 col-md-4">
                 <div class="thumbnail">
-                  <img :src="sharedKeep.imgUrl" alt="">
-                  <div class="caption">vaultId)
+                  <img :src="sharedKeep.imageUrl" alt="" height="150" width="150">
+                  <div class="caption">
                     <h3>{{ sharedKeep.title }}</h3>
-                    <p>{{ sharedKeep.body }}</p>
-
-
-                    <!--<router-link :to="'/selectvault/'">-->
+                    <p>{{ sharedKeep.articleLink }}</p>
                     <button v-if="showKeepToVaultForm" @click="showKeepToVault(sharedKeep)" class="waves-effect waves-light btn">Save Keep!</button>
-                    <!--</router-link>-->
-                    <!--<transition name="modal" v-if="!showKeepToVaultForm">
-                      <div class="modal-mask">
-                        <div class="modal-wrapper">
-                          <div class="modal-container">
-                            <div>
-
-                              <form @submit.prevent="getVault(vaultId)" class="row">-->
-
-                    <!--<div v-for="(uservault, index) in uservaults" class="col s12 m3">-->
-                    <!--<div class="input-field col s12">
-                                  <select id="selected" required>
-          <option v-for="vault in uservaults" :value="vault._id">{{ vault.name }}</option>
-        </select>
-                                  <label>Vault</label>
-                                </div>-->
-
-                    <!--<input type="selected" :id="index" v-model="vaultId" :value="uservault._id">
-                                  <label for="choice">{{ uservault.name }}</label>-->
-
-                    <!--</div>-->
-                    <!--<button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
-                                <button @click="routeHome" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
-                              </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </transition>-->
-
-
                   </div>
                 </div>
               </div>
@@ -162,9 +135,15 @@
         vaultId: [],
         keepName: '',
         keepDesc: '',
+        keepUrl: '',
+        keepTags: '',
+        keepPublic: '',
         showKeepForm: false,
 
       }
+    },
+    mounted() {
+      this.$root.$data.store.actions.getPublicKeeps();
     },
     computed: {
       uservaults(vaults) {
@@ -173,13 +152,14 @@
       },
 
       sharedKeeps() {
-        return this.$root.$data.store.state.keeps
+        return this.$root.$data.store.state.keeps;
       }
     },
     methods: {
       getVault: function (x) {
         console.log(x)
-        console.log(this.vaultId)
+        this.$root.$data.store.actions.getKeeps(x)
+      
         // console.log(vaultId)
       },
       deleteVault: function (vault) {
@@ -198,15 +178,22 @@
         this.vaultDesc = ''
       },
       addKeep: function () {
+        var pubcheck = document.getElementById('public-check-box').checked
         this.$root.$data.store.actions.createKeep({
           title: this.keepName,
-          body: this.keepDesc,
-          imgUrl: this.url,
-          public: this.public,
+          articleLink: this.keepDesc,
+          imageUrl: this.keepUrl,
+          public: pubcheck,
+          tags: this.keepTags
         }, this.$route.params.id)
+        Materialize.toast('Saved a keep!', 1000);
         this.showKeepForm = false
         this.keepName = ''
         this.keepDesc = ''
+        this.keepUrl = ''
+        this.keepPublic = ''
+        this.keepTags = ''
+
         this.$router.push("/")
       },
       triggerVaultForm: function () {

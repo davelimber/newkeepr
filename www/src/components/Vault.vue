@@ -1,37 +1,20 @@
 <template>
-    <transition name="modal" v-if="showmodal">
-        <div class="modal-mask">
-            <div class="modal-wrapper">
-                <div class="modal-container">
-                    <div>
-                        <h4>Add a Keep</h4>
+    <div>
+        <h2> Vault Name </h2>
+        <h3>{{ activeVault.name }}</h3>
+        <p>{{ activeVault.description }}</p>
 
-                        
-                        <form class="row" @submit.prevent="addKeep">
-                            <div class="col s12 input-field">
-                                <input type="text" id="keepName" v-model="keepName" required>
-                                <label for="keepName">Title</label>
-                            </div>
-                            <div class="col s12 input-field">
-                                <textarea class="materialize-textarea" id="keepDesc" cols="30" rows="10" v-model="keepDesc"></textarea>
-                                <label for="keepDesc">Description</label>
-                            </div>
-                            <div class="col s12 input-field">
-                                <textarea class="materialize-textarea" id="url" cols="30" rows="10" v-model="url"></textarea>
-                                <label for="url">URL</label>
-                            </div>
-                            <div class="col s12 input-field">
-                                <textarea class="modal-footer" id="public" type="checkbox" v-model="public"></textarea>
-                                <label for="public">Public?</label>
-                            </div>
-                            <button class="waves-effect waves-teal btn" type="submit">Add Keep</button>
-                            <button @click="routeHome" class="waves-effect waves-teal btn-flat"><i class="fa fa-times"></i></button>
-                        </form>
-                    </div>
-                </div>
-            </div>
+        <div v-for="keep in activeVault.keeps" class="col m4 s6">
+
+            {{ keep }}
+
+            <button @click="removeKeep(keep)"><i class="fa fa-times"> </i></button>
+
         </div>
-    </transition>
+
+
+
+    </div>
 </template>
 
 
@@ -50,16 +33,17 @@
                 showmodal: true
             }
         },
-        // mounted() {
-        //     this.$root.$data.store.actions.getVaults(this.$route.params.id)
-        // },
+        mounted() {
+            this.$root.$data.store.actions.setActiveVault(this.$route.params.id)
+        },
         computed: {
-            vaults() {
+            activeVault() {
+                return this.$root.$data.store.state.activeVault
+            },
+            uservaults(vaults) {
+
                 return this.$root.$data.store.state.myVaults
             },
-            sharedVaults() {
-                return this.$root.$data.store.state.keeps
-            }
         },
         methods: {
             getVault: function (vaultId) {
@@ -77,6 +61,9 @@
                 this.keepName = ''
                 this.keepDesc = ''
                 this.$router.push("/")
+            },
+            removeKeep: function () {
+                this.$route.data.store.actions.removeKeepFromVault(this.$route.params.id, keep)
             },
             triggerKeepForm: function () {
                 this.showKeepForm = !this.showKeepForm
